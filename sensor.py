@@ -29,7 +29,7 @@ def detect_sigfox():
 path = "/home/pi/Data/"
 Restful_URL = "https://data.lass-net.org/Upload/SigFox.php"
 sigfox_id = detect_sigfox()
-# print("sigfox_id: ", sigfox_id)
+print("sigfox_id: ", sigfox_id)
     
 while True:
     data = ""
