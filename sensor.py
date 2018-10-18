@@ -13,6 +13,7 @@ def readlineCR(port):
             return rv
 
 def detect_sigfox():
+    name = "CCLLJJ"
     for i in range(0, 6):
         if(os.path.exists('/dev/ttyUSB' + str(i))):
             ser = serial.Serial(port = '/dev/ttyUSB' + str(i), baudrate = 9600, timeout = 3.0)
