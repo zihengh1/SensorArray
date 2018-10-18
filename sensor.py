@@ -15,57 +15,66 @@ def readlineCR(port):
 def detect_sigfox():
     for i in range(0, 6):
         if(os.path.exists('/dev/ttyUSB' + str(i))):
-            ser = serial.Serial(port = '/dev/ttyUSB' + str(i), baudrate = 9600, timeout = 0.2)
+            ser = serial.Serial(port = '/dev/ttyUSB' + str(i), baudrate = 9600, timeout = 3.0)
             ser.write("AT\r\n")
-            rcv = readlineCR(ser)
-            ser.flushInput()
-            ser.close()
-            time.sleep(0.5)
-            if rcv[:2] == "OK":
+            state = readlineCR(ser)
+            print(state)
+            if state[:2] == "OK":
+                ser.write("AT$I=10\r\n")
+                name = readlineCR(ser)
+                print(name)
+                ser.close()
                 break
-            
-    return i
+    return i, name
 
 path = "/home/pi/Data/"
 Restful_URL = "https://data.lass-net.org/Upload/SigFox.php"
-sigfox_id = detect_sigfox()
-print("sigfox_id: ", sigfox_id)
+sigfox_id, device_id = detect_sigfox()
+print("sigfox_port: ", sigfox_id)
+device_id = device_id[3:9]
+print("device_id: ", device_id)
     
 while True:
     data = ""
     now_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S").split(" ")
     for i in range(0, 6):
         if i is not sigfox_id:
-            if(os.path.exists('/dev/ttyUSB' + str(i))):
-                print("dev/ttyUSB " + str(i) + "exists")
-                ser = serial.Serial(
-            	    port = '/dev/ttyUSB'+str(i),
-                    baudrate = 9600,
-                    parity = serial.PARITY_NONE,
-                    stopbits = serial.STOPBITS_ONE, 
-                    bytesize = serial.EIGHTBITS,
-              	)
-                data += '|s%d:%d' % (i, int(ser.read(32)[7].encode('hex'), 16))
-                ser.flushInput()
-                ser.close()
-                time.sleep(0.2)
-            else:
-                print("dev/ttyUSB " + str(i) + "not exists")
+            try:
+                if(os.path.exists('/dev/ttyUSB' + str(i))):
+                    print("dev/ttyUSB " + str(i) + "exists")
+                    ser = serial.Serial(
+                	    port = '/dev/ttyUSB'+str(i),
+                        baudrate = 9600,
+                        parity = serial.PARITY_NONE,
+                        stopbits = serial.STOPBITS_ONE, 
+                        bytesize = serial.EIGHTBITS,
+                  	)
+                    data += '|s%d:%d' % (i, int(ser.read(32)[7].encode('hex'), 16))
+                    ser.flushInput()
+                    ser.close()
+                    time.sleep(0.2)
+                else:
+                    print("dev/ttyUSB " + str(i) + "not exists")
 
+            except Exception as e:
+                ser.close()
+                print "serial.port is closed"
+                print(e)
+    
     data += '|%s_%s' % (str(now_time[0]), str(now_time[1]))
     data_dict = Enc.split_string(data)
     T3_binstr = Enc.dec_to_binstr(data_dict)
     T3_hexstr = Enc.bin_to_hex(T3_binstr)
     print "T3_hexstr : ", T3_hexstr
+     
     try:
         port = serial.Serial("/dev/ttyUSB" + str(sigfox_id), baudrate=9600, timeout=3.0)
-    
-        port.write("AT$I=10\r\n")
-        time.sleep(0.1)
-        device_id = readlineCR(port)[2:8]
-        data += '|%s' % (device_id)
-        print(device_id)
-    
+        
+        # port.write("AT$I=10\r\n")
+        # time.sleep(0.1)
+        # device_id = readlineCR(port)
+        # print(device_id) 
+
         port.write("AT$GI?\r\n")
         time.sleep(0.1)
         channel = readlineCR(port)
@@ -73,24 +82,28 @@ while True:
 
         print "sent msg: " + T3_hexstr
         port.write("AT$SF=" + T3_hexstr + "\r\n")
-        time.sleep(3)
+        time.sleep(0.1)
 
         port.write("AT$RC\r\n")
         time.sleep(0.1)
         port.flushInput()
         port.close()
+      
+        restful_str3 = "wget -O /tmp/last_upload.log \"" + Restful_URL + "?device_id=" + device_id + "&data=" + T3_hexstr + "\""
+        # restful_str3 = "wget -O /tmp/last_upload.log \"" + Restful_URL + "?device_id=" + "CCLLJJ" + "&data=" + T3_hexstr + "\""
+        os.system(restful_str3)
+        data += '|' + device_id
+ 	
     except Exception as e:
+        port.close()
+        print "serial.port is closed"
         print(e)
     
-    # restful_str3 = "wget -O /tmp/last_upload.log \"" + Restful_URL + "?device_id=" + device_id + "&data=" + T3_hexstr + "\""
-    restful_str3 = "wget -O /tmp/last_upload.log \"" + Restful_URL + "?device_id=" + "CCLLJJ" + "&data=" + T3_hexstr + "\""
 
-    os.system(restful_str3)
-	
     with open(path + str(now_time[0]) + ".txt", "a") as f:
         try: 
             f.write(data + "\n")
         except:
             print "Error: writing to SD"	
     
-    time.sleep(292)
+    time.sleep(0.1)

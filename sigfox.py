@@ -36,7 +36,7 @@ print(rcv)
 while True:
     port.write("AT$I=10\r\n")
     time.sleep(0.5)
-    rcv = readlineCR(port)
+    rcv = readlineCR(port)[3:9]
     print(rcv)
     
     port.write("AT$GI?\r\n")
