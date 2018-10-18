@@ -13,7 +13,7 @@ def readlineCR(port):
             return rv
 
 def detect_sigfox():
-    name = "CCLLJJ"
+    name = "CCLLJJ\r"
     id = 0
     for i in range(0, 6):
         if(os.path.exists('/dev/ttyUSB' + str(i))):
