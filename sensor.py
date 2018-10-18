@@ -18,23 +18,23 @@ def detect_sigfox():
             ser = serial.Serial(port = '/dev/ttyUSB' + str(i), baudrate = 9600, timeout = 3.0)
             ser.write("AT\r\n")
             state = readlineCR(ser)
-            print(state)
             if state[:2] == "OK":
                 ser.write("AT$I=10\r\n")
                 name = readlineCR(ser)
-                print(name)
                 ser.close()
                 break
     return i, name
 
-os.system("./startup")
+# os.system("./startup")
 path = "/home/pi/Data/"
 Restful_URL = "https://data.lass-net.org/Upload/SigFox.php"
 sigfox_id, device_id = detect_sigfox()
 print("sigfox_port: ", sigfox_id)
-device_id = device_id[3:9]
+pivot = device_id.find("\r")
+device_id = device_id[(pivot-6) : (pivot)]
 print("device_id: ", device_id)
-    
+
+
 while True:
     data = ""
     now_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S").split(" ")
