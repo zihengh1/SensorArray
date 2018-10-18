@@ -14,17 +14,19 @@ def readlineCR(port):
 
 def detect_sigfox():
     name = "CCLLJJ"
+    id = 0
     for i in range(0, 6):
         if(os.path.exists('/dev/ttyUSB' + str(i))):
             ser = serial.Serial(port = '/dev/ttyUSB' + str(i), baudrate = 9600, timeout = 3.0)
             ser.write("AT\r\n")
             state = readlineCR(ser)
             if state[:2] == "OK":
+                id = i
                 ser.write("AT$I=10\r\n")
                 name = readlineCR(ser)
                 ser.close()
                 break
-    return i, name
+    return id, name
 
 os.system("./startup")
 path = "/home/pi/Data/"
