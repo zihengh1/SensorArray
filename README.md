@@ -13,7 +13,7 @@ use raspberry pi 3B+ to read pm2.5 data from first version MIT sensor <br>
 - Sigfox (optional)
 
 ## 3. Where can we set this IOT system:
-- Outside
+- Outdoor
 - The place where the system can be covered by
 - Supported by the stable power
 
