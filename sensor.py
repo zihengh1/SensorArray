@@ -29,6 +29,8 @@ def detect_sigfox():
                     break
             except Exception as e:
                 ser.close()
+                print "serial.port is closed"
+                print(e)
     return id, name
 
 os.system("./startup")
@@ -39,7 +41,6 @@ print("sigfox_port: ", sigfox_id)
 pivot = device_id.find("\r")
 device_id = device_id[(pivot-6) : (pivot)]
 print("device_id: ", device_id)
-
 
 while True:
     data = ""
