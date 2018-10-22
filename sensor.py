@@ -14,7 +14,7 @@ def readlineCR(port):
 
 def detect_sigfox():
     name = "CCLLJJ\r"
-    id = 0
+    id = -1
     for i in range(0, 6):
         if(os.path.exists('/dev/ttyUSB' + str(i))):
             ser = serial.Serial(port = '/dev/ttyUSB' + str(i), baudrate = 9600, timeout = 3.0)
@@ -71,36 +71,38 @@ while True:
     T3_hexstr = Enc.bin_to_hex(T3_binstr)
     print "T3_hexstr : ", T3_hexstr
      
-    try:
-        port = serial.Serial("/dev/ttyUSB" + str(sigfox_id), baudrate=9600, timeout=3.0)
+    if sigfox_id is not -1:
+        try:
+            port = serial.Serial("/dev/ttyUSB" + str(sigfox_id), baudrate=9600, timeout=3.0)
         
-        # port.write("AT$I=10\r\n")
-        # time.sleep(0.1)
-        # device_id = readlineCR(port)
-        # print(device_id) 
+            # port.write("AT$I=10\r\n")
+            # time.sleep(0.1)
+            # device_id = readlineCR(port)
+            # print(device_id) 
 
-        port.write("AT$GI?\r\n")
-        time.sleep(0.1)
-        channel = readlineCR(port)
-        print(channel)
+            port.write("AT$GI?\r\n")
+            time.sleep(0.1)
+            channel = readlineCR(port)
+            print(channel)
 
-        print "sent msg: " + T3_hexstr
-        port.write("AT$SF=" + T3_hexstr + "\r\n")
-        time.sleep(0.1)
+            print "sent msg: " + T3_hexstr
+            port.write("AT$SF=" + T3_hexstr + "\r\n")
+            time.sleep(0.1)
 
-        port.write("AT$RC\r\n")
-        time.sleep(0.1)
-        port.flushInput()
-        port.close()
+            port.write("AT$RC\r\n")
+            time.sleep(0.1)
+            port.flushInput()
+            port.close()
       
-        restful_str3 = "wget -O /tmp/last_upload.log \"" + Restful_URL + "?device_id=" + device_id + "&data=" + T3_hexstr + "\""
-        # restful_str3 = "wget -O /tmp/last_upload.log \"" + Restful_URL + "?device_id=" + "CCLLJJ" + "&data=" + T3_hexstr + "\""
-        os.system(restful_str3)
-        data += '|' + device_id
+            restful_str3 = "wget -O /tmp/last_upload.log \"" + Restful_URL + "?device_id=" + device_id + "&data=" + T3_hexstr + "\""
+            # restful_str3 = "wget -O /tmp/last_upload.log \"" + Restful_URL + "?device_id=" + "CCLLJJ" + "&data=" + T3_hexstr + "\""
+            os.system(restful_str3)
+            data += '|' + device_id
  	
-    except Exception as e:
-        print(e)
-    
+        except Exception as e:
+            port.close()
+            print "serial.port is closed"
+            print(e)
 
     with open(path + str(now_time[0]) + ".txt", "a") as f:
         try: 
