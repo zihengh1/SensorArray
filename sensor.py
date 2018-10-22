@@ -99,8 +99,6 @@ while True:
         data += '|' + device_id
  	
     except Exception as e:
-        port.close()
-        print "serial.port is closed"
         print(e)
     
 
