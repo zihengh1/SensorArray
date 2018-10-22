@@ -31,6 +31,8 @@ def detect_sigfox():
                     break
             except Exception as e:
                 ser.close()
+                print "serial.port is closed"
+                print(e)
     return id, name
 
 os.system("sh /home/pi/SensorArray/startup")
@@ -51,7 +53,7 @@ while True:
                 if(os.path.exists('/dev/ttyUSB' + str(i))):
                     print("dev/ttyUSB " + str(i) + "exists")
                     ser = serial.Serial(
-                	    port = '/dev/ttyUSB'+str(i),
+                        port = '/dev/ttyUSB'+str(i),
                         baudrate = 9600,
                         parity = serial.PARITY_NONE,
                         stopbits = serial.STOPBITS_ONE, 
