@@ -51,7 +51,7 @@ while True:
                 if(os.path.exists('/dev/ttyUSB' + str(i))):
                     print("dev/ttyUSB " + str(i) + "exists")
                     ser = serial.Serial(
-                	    port = '/dev/ttyUSB'+str(i),
+                        port = '/dev/ttyUSB'+str(i),
                         baudrate = 9600,
                         parity = serial.PARITY_NONE,
                         stopbits = serial.STOPBITS_ONE, 
