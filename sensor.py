@@ -33,7 +33,7 @@ def detect_sigfox():
                 print(e)
     return id, name
 
-os.system("./startup")
+os.system("sh /home/pi/SensorArray/startup")
 path = "/home/pi/Data/"
 Restful_URL = "https://data.lass-net.org/Upload/SigFox.php"
 sigfox_id, device_id = detect_sigfox()
