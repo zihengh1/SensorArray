@@ -13,7 +13,9 @@ def readlineCR(port):
             return rv
 
 def detect_sigfox():
-    name = "CCLLJJ\r"
+    interface = "wlan0"
+    mac = open('/sys/class/net/%s/address' %interface).read().replace("\n", "")
+    name = mac.replace(':','')[5:] + "\r"
     id = -1
     for i in range(0, 6):
         if(os.path.exists('/dev/ttyUSB' + str(i))):
@@ -31,7 +33,7 @@ def detect_sigfox():
                 ser.close()
     return id, name
 
-os.system("./startup")
+os.system("sh /home/pi/SensorArray/startup")
 path = "/home/pi/Data/"
 Restful_URL = "https://data.lass-net.org/Upload/SigFox.php"
 sigfox_id, device_id = detect_sigfox()
@@ -39,7 +41,6 @@ print("sigfox_port: ", sigfox_id)
 pivot = device_id.find("\r")
 device_id = device_id[(pivot-6) : (pivot)]
 print("device_id: ", device_id)
-
 
 while True:
     data = ""
@@ -96,21 +97,22 @@ while True:
             time.sleep(0.1)
             port.flushInput()
             port.close()
-      
-            restful_str3 = "wget -O /tmp/last_upload.log \"" + Restful_URL + "?device_id=" + device_id + "&data=" + T3_hexstr + "\""
-            # restful_str3 = "wget -O /tmp/last_upload.log \"" + Restful_URL + "?device_id=" + "CCLLJJ" + "&data=" + T3_hexstr + "\""
-            os.system(restful_str3)
-            data += '|' + device_id
- 	
+        
         except Exception as e:
             port.close()
             print "serial.port is closed"
             print(e)
-
+  
+    restful_str3 = "wget -O /tmp/last_upload.log \"" + Restful_URL + "?device_id=" + device_id + "&data=" + T3_hexstr + "\""
+    # restful_str3 = "wget -O /tmp/last_upload.log \"" + Restful_URL + "?device_id=" + "CCLLJJ" + "&data=" + T3_hexstr + "\""
+    os.system(restful_str3)
+    data += '|' + device_id
+ 	
+        
     with open(path + str(now_time[0]) + ".txt", "a") as f:
         try: 
             f.write(data + "\n")
         except:
             print "Error: writing to SD"	
     
-    time.sleep(296)
+    time.sleep(292)
