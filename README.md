@@ -23,3 +23,9 @@ use raspberry pi 3B+ to read pm2.5 data from first version MIT sensor <br>
 
 ## 5. How to check my data?
 - Please click this website: https://pm25.lass-net.org/AirBox/detail.php?city=other-ITRI_PM25
+
+## 6. Initial this IMG
+- sudo apt-get update
+- sudo apt-get upgrade
+- sudo apt-get install python-serial
+- sudo apt-get install git
