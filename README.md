@@ -29,3 +29,4 @@ use raspberry pi 3B+ to read pm2.5 data from first version MIT sensor <br>
 - sudo apt-get upgrade
 - sudo apt-get install python-serial
 - sudo apt-get install git
+test
