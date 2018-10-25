@@ -5,9 +5,9 @@ sleep 1
     /usr/bin/git -C /home/pi/SensorArray fetch origin
     /usr/bin/git -C /home/pi/SensorArray reset --hard origin/master
     DATE=$(date +'%Y-%m-%d %H:%M:%S')
-    echo DATE
+    echo $DATE
 } || {
     /usr/bin/git clone https://github.com/zihengh1/SensorArray/ /home/pi/SensorArray
     DATE=$(date +'%Y-%m-%d %H:%M:%S')
-    echo DATE
+    echo $DATE
 }
