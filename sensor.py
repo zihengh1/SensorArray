@@ -13,9 +13,7 @@ def readlineCR(port):
             return rv
 
 def detect_sigfox():
-    interface = "wlan0"
-    mac = open('/sys/class/net/%s/address' %interface).read().replace("\n", "")
-    name = mac.replace(':','')[5:] + "\r"
+    name = "CCLLJJ\r"
     id = -1
     for i in range(0, 6):
         if(os.path.exists('/dev/ttyUSB' + str(i))):
