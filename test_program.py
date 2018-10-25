@@ -40,6 +40,7 @@ print("sigfox_port: ", sigfox_id)
 pivot = device_id.find("\r")
 device_id = device_id[(pivot-6) : (pivot)]
 print("device_id: ", device_id)
+device_id = "41484D"
 
 while True:
     data = ""
@@ -114,4 +115,4 @@ while True:
         except:
             print "Error: writing to SD"	
     
-    time.sleep(292)
+    time.sleep(6)
