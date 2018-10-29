@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 SigFox_ID   SigFox_PAC-Number   gps_lat gps_lon
+=======
+
+>>>>>>> 4b2282aa8121176b01d405635cb274fac0832b9c
 41473B  19D95CBAD9B1465C    0   0
 41493E  A1C485A3F8FF634C    0   0
 41484D  E241BC43A118BF8A    0   0
