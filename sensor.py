@@ -104,7 +104,11 @@ while True:
   
     restful_str3 = "wget -O /tmp/last_upload.log \"" + Restful_URL + "?device_id=" + device_id + "&data=" + T3_hexstr + "\""
     # restful_str3 = "wget -O /tmp/last_upload.log \"" + Restful_URL + "?device_id=" + "CCLLJJ" + "&data=" + T3_hexstr + "\""
-    os.system(restful_str3)
+    try:
+        os.system(restful_str3)
+    except Exception as e:
+        pass
+    
     data += '|' + device_id
  	
         
