@@ -118,4 +118,4 @@ while True:
         except:
             print "Error: writing to SD"	
     
-    time.sleep(282)
+    time.sleep(288)
