@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sleep 1
+sleep 10
 [ -f /home/pi/SensorArray/sensor.py ] && {
     /usr/bin/sudo git -C /home/pi/SensorArray fetch --all
     /usr/bin/sudo git -C /home/pi/SensorArray reset --hard origin/master
