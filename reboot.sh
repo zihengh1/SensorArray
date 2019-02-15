@@ -1,6 +1,10 @@
 #!/bin/bash
 
 sleep 10
+
+#kill python run more then 1 day
+sudo killall -o 1d python
+
 [ -f /home/pi/SensorArray/sensor.py ] && {
     /usr/bin/sudo git -C /home/pi/SensorArray fetch --all
     /usr/bin/sudo git -C /home/pi/SensorArray reset --hard origin/master
